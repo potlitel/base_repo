@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://www.programmerclick.com/article/64061051058/ -->
+<html><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="keywords" content="Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos, programador clic">
+<meta name="description" content="Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos, programador clic, el mejor sitio para compartir artículos técnicos de un programador.">
+<title>Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic</title>
+<link rel="stylesheet" href="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/normalize.css">
+<link rel="stylesheet" href="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/foundation.min.css">
+<link rel="stylesheet" href="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/superfish.css">
+<link rel="stylesheet" href="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/stylesheet.css">
+<link href="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/fonts.css" rel="stylesheet" type="text/css">
+<!--[if lt IE 9]>
+<link rel="stylesheet" href="/css/ie-fixes.css">
+<![endif]-->
+<link rel="stylesheet" href="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/viewer.min.css">
+
+<script async="" src="https://mc.yandex.ru/metrika/tag.js"></script><script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PC2RG39"></script><script async="" type="text/javascript" src="https://quantcast.mgr.consensu.org/choice/6Fv0cGNfc_bw8/www.themoneytizer.com/choice.js"></script><script type="text/javascript" async="true">
+(function() {
+    var host = 'www.themoneytizer.com';
+    var element = document.createElement('script');
+    var firstScript = document.getElementsByTagName('script')[0];
+    var url = 'https://quantcast.mgr.consensu.org'
+        .concat('/choice/', '6Fv0cGNfc_bw8', '/', host, '/choice.js')
+    var uspTries = 0;
+    var uspTriesLimit = 3;
+    element.async = true;
+    element.type = 'text/javascript';
+    element.src = url;
+
+    firstScript.parentNode.insertBefore(element, firstScript);
+
+    function makeStub() {
+        var TCF_LOCATOR_NAME = '__tcfapiLocator';
+        var queue = [];
+        var win = window;
+        var cmpFrame;
+
+        function addFrame() {
+            var doc = win.document;
+            var otherCMP = !!(win.frames[TCF_LOCATOR_NAME]);
+
+            if (!otherCMP) {
+                if (doc.body) {
+                    var iframe = doc.createElement('iframe');
+
+                    iframe.style.cssText = 'display:none';
+                    iframe.name = TCF_LOCATOR_NAME;
+                    doc.body.appendChild(iframe);
+                } else {
+                    setTimeout(addFrame, 5);
+                }
+            }
+            return !otherCMP;
+        }
+
+        function tcfAPIHandler() {
+            var gdprApplies;
+            var args = arguments;
+
+            if (!args.length) {
+                return queue;
+            } else if (args[0] === 'setGdprApplies') {
+                if (
+                    args.length > 3 &&
+                    args[2] === 2 &&
+                    typeof args[3] === 'boolean'
+                ) {
+                    gdprApplies = args[3];
+                    if (typeof args[2] === 'function') {
+                        args[2]('set', true);
+                    }
+                }
+            } else if (args[0] === 'ping') {
+                var retr = {
+                    gdprApplies: gdprApplies,
+                    cmpLoaded: false,
+                    cmpStatus: 'stub'
+                };
+
+                if (typeof args[2] === 'function') {
+                    args[2](retr);
+                }
+            } else {
+                queue.push(args);
+            }
+        }
+
+        function postMessageEventHandler(event) {
+            var msgIsString = typeof event.data === 'string';
+            var json = {};
+
+            try {
+                if (msgIsString) {
+                    json = JSON.parse(event.data);
+                } else {
+                    json = event.data;
+                }
+            } catch (ignore) {}
+
+            var payload = json.__tcfapiCall;
+
+            if (payload) {
+                window.__tcfapi(
+                    payload.command,
+                    payload.version,
+                    function(retValue, success) {
+                        var returnMsg = {
+                            __tcfapiReturn: {
+                                returnValue: retValue,
+                                success: success,
+                                callId: payload.callId
+                            }
+                        };
+                        if (msgIsString) {
+                            returnMsg = JSON.stringify(returnMsg);
+                        }
+                        event.source.postMessage(returnMsg, '*');
+                    },
+                    payload.parameter
+                );
+            }
+        }
+
+        while (win) {
+            try {
+                if (win.frames[TCF_LOCATOR_NAME]) {
+                    cmpFrame = win;
+                    break;
+                }
+            } catch (ignore) {}
+
+            if (win === window.top) {
+                break;
+            }
+            win = win.parent;
+        }
+        if (!cmpFrame) {
+            addFrame();
+            win.__tcfapi = tcfAPIHandler;
+            win.addEventListener('message', postMessageEventHandler, false);
+        }
+    };
+
+    if (typeof module !== 'undefined') {
+        module.exports = makeStub;
+    } else {
+        makeStub();
+    }
+
+    var uspStubFunction = function() {
+        var arg = arguments;
+        if (typeof window.__uspapi !== uspStubFunction) {
+            setTimeout(function() {
+                if (typeof window.__uspapi !== 'undefined') {
+                    window.__uspapi.apply(window.__uspapi, arg);
+                }
+            }, 500);
+        }
+    };
+
+    var checkIfUspIsReady = function() {
+        uspTries++;
+        if (window.__uspapi === uspStubFunction && uspTries < uspTriesLimit) {
+            console.warn('USP is not accessible');
+        } else {
+            clearInterval(uspInterval);
+        }
+    };
+
+    if (typeof window.__uspapi === 'undefined') {
+        window.__uspapi = uspStubFunction;
+        var uspInterval = setInterval(checkIfUspIsReady, 6000);
+    }
+})();
+</script>
+
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PC2RG39');</script>
+
+<script async="" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+   window.googletag = window.googletag || {cmd: []};
+         googletag.cmd.push(function() {
+           var interstitialSlot = googletag.defineOutOfPageSlot('/147246189,22396446015/programmerclick.com_interstitial', googletag.enums.OutOfPageFormat.INTERSTITIAL);
+           if (interstitialSlot) interstitialSlot.addService(googletag.pubads());
+           googletag.pubads().enableSingleRequest();
+           googletag.enableServices();
+           googletag.display(interstitialSlot);
+       });
+</script>
+</head>
+<body>
+<div class="row outterWrapper">
+<div class="columns large-12">
+<div class="row header-row">
+<div class="columns header-inner large-12" style="padding:0px;padding-left:39px;"><h1 style="font-size:40px;font-weight: bold;margin-bottom:8px;margin-top:8px;"><a href="http://programmerclick.com/">programador clic</a><span id="short-desc" style="font-size:12px;font-weight: normal;">&nbsp;</span></h1></div>
+</div>
+<div class="row menu-row">
+<div class="columns top-menu large-12 top-nav">
+<nav>
+<section>
+<ul class="sf-menu">
+<li class="active"><a href="http://programmerclick.com/">Página principal</a></li>
+<li><a href="mailto:programmerclick@gmx.com">Contacto</a></li>
+</ul>
+</section>
+</nav>
+</div>
+</div>
+<div class="row small-top-menu">
+<div class="columns large-12 plr0 top-nav">
+<form name="dropdown" action="https://www.programmerclick.com/article/64061051058/#">
+<nav>
+<section>
+<ul class="sf-menu">
+<li class="active"><a href="http://programmerclick.com/">Página principal</a></li>
+<li><a href="mailto:programmerclick@gmx.com">Contacto</a></li>
+</ul>
+</section>
+</nav>
+</form>
+</div>
+</div>
+</div>
+<div class="columns large-12 content-row">
+<div class="row title">
+<div class="columns large-12 content-title-inner">
+<div class="row">
+<div class="columns large-12">
+<form id="searchForm" action="https://www.programmerclick.com/search" method="post" onsubmit="return validate();" style="margin:0;float:right;">
+<div>
+<input type="text" name="s" id="s" style="font-size:16px;width:200px;display: inline-block;padding:0;margin:0"> <input type="submit" value="buscar" style="color:black;display: inline-block;height:32px;font-size:16px;">
+</div>
+</form>
+<div style="clear:both;"></div>
+</div>
+</div>
+</div>
+</div>
+<div id="topads" style="text-align:center;margin-top:10px;width:100%;height:250px;" class="adsloading">
+<div style="text-align:center;" id="79041-31"><script src="https://ads.themoneytizer.com/s/gen.js?type=31"></script><script src="https://ads.themoneytizer.com/s/requestform.js?siteId=79041&amp;formatId=31"></script></div>
+</div>
+<div id="topads1" style="text-align:center;margin-top:10px;">
+<iframe id="programmerclick.com_980x300_responsive_1_DFP" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" width="1" height="1" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/saved_resource.html"></iframe>
+<script>
+    (function () {
+        var size='970x250|300x250',
+            adunit = 'programmerclick.com_980x300_responsive_1_DFP',
+            childNetworkId = '22396446015',
+            xmlhttp = new XMLHttpRequest();xmlhttp.onreadystatechange = function(){if(xmlhttp.readyState==4 && xmlhttp.status==200){var iframe=document.getElementById(adunit).contentWindow.document;iframe.open();iframe.write(xmlhttp.responseText);iframe.close();}};var child=childNetworkId.trim()?','+childNetworkId.trim():'';xmlhttp.open("GET", 'https://pubads.g.doubleclick.net/gampad/adx?iu=/147246189'+child+'/'+adunit+'&sz='+encodeURI(size)+'&t=Placement_type%3Dserving&'+Date.now(), true);xmlhttp.send();})();
+</script>
+</div>
+<div class="row content about">
+<div class="columns large-12 content-inner">
+<div class="row">
+<div class="columns large-7">
+<h2 style="line-height: 32px;word-break: break-all;">
+<span>Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos</span>
+</h2>
+<div style="clear:both;"></div>
+<div id="contentaboveads" style="width:100%;text-align:center;padding-top:10px;">
+<iframe id="programmerclick.com_750x200_responsive_2_DFP" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" width="1" height="1" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/saved_resource(1).html"></iframe>
+<script>
+    (function () {
+        var size='750x200|300x250',
+            adunit = 'programmerclick.com_750x200_responsive_2_DFP',
+            childNetworkId = '22396446015',
+            xmlhttp = new XMLHttpRequest();xmlhttp.onreadystatechange = function(){if(xmlhttp.readyState==4 && xmlhttp.status==200){var iframe=document.getElementById(adunit).contentWindow.document;iframe.open();iframe.write(xmlhttp.responseText);iframe.close();}};var child=childNetworkId.trim()?','+childNetworkId.trim():'';xmlhttp.open("GET", 'https://pubads.g.doubleclick.net/gampad/adx?iu=/147246189'+child+'/'+adunit+'&sz='+encodeURI(size)+'&t=Placement_type%3Dserving&'+Date.now(), true);xmlhttp.send();})();
+</script>
+</div>
+<div style="padding:5px 5px 5px 5px;word-wrap: break-word; word-break: normal;max-width: 950px;font-size:14px;" id="article_content">
+<div class="htmledit_views">
+<div class="content-detail markdown-body">
+Original:<a href="http://blog.csdn.net/dba_huangzj/article/details/8130448" rel="nofollow,noindex" target="_blank"> <font color="#FF0000"></font> Utilice la función CDC de SQLServer 2008 para lograr la captura de cambios de datos </a>
+<p> </p>
+<p>Recientemente, debido a necesidades laborales, estudié la función de los CDC de 2008 y encontré que era bastante buena. El proceso de investigación se resume a continuación. Aunque es relativamente difícil, básicamente se puede utilizar. Si hay algún suplemento, responda. Modificaré la publicación original según corresponda. Gracias.</p>
+<h1>antecedentes:</h1>
+<div> <span></span>
+<p><span></span>Antes de SQL Server 2008, la captura de cambios de datos generalmente se implementaba utilizando funciones ineficientes y de alto costo, como desencadenadores y marcas de tiempo, por lo que muchos sistemas no realizaban cambios de datos o solo monitoreaban tablas centrales.</p> Desde que SQLServer2008 introdujo la función de captura de cambios de datos (en adelante, CDC), se han resuelto muchos problemas. Por ejemplo, un cliente cambió un dato hace 2 meses, pero debido a la falta de espacio en el servidor, a menudo Solo se pueden conservar las copias de seguridad de un mes. En este momento, para evitar el gran impacto negativo causado por el cambio de datos, el cliente a menudo transfiere la responsabilidad al desarrollador de software o la empresa de operación y mantenimiento. Si hay captura de cambio en este momento, hay evidencia. Por supuesto, también se puede lograr analizar el registro. Pero es más doloroso.
+</div>
+<div>
+<br>
+</div>
+<h1>Entorno aplicable:</h1>
+<div> <span></span>
+<p><span></span>Solo disponible en Enterprise Edition, Development Edition y Evaluation Edition después de SQLServer2008 (incluido).</p>
+<p><br></p>
+<h1>Explicación detallada:</h1>
+<div> <span></span>
+<p><span></span>La función CDC captura principalmente las operaciones de adición, eliminación y modificación de la tabla especificada de SQL Server. Dado que cualquier operación escribirá el registro (incluso truncar), la captura de CDC proviene del archivo de registro. El archivo de registro aplicará los cambios al archivo de datos y también marcará los datos que cumplen con los requisitos como elementos que deben ser rastreados. Luego, a través de algunas funciones de apoyo, y finalmente se escribe en el almacén de datos. Proceso aproximado:</p>
+<p><span><img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/03ab42f990f74370ff0af77fd5e4adab.gif" alt=""></span></p>
+<p><span><span></span></span></p>
+<h1>Pasos: tome AdventureWorks como ejemplo en este artículo</h1>
+<p> </p>
+<p><br></p>
+<p> </p>
+<h2>El primer paso es apuntar a la biblioteca<span style="color:#FF0000;">Explícito</span>Habilitar CDC:<br></h2>
+<div>
+<p>Utilice sys.sp_cdc_enable_db en la biblioteca actual. Devuelve 0 (éxito) o 1 (fracaso). Tenga en cuenta que esta función no se puede habilitar para la base de datos del sistema y la base de datos de distribución. Y el ejecutor debe usar la autoridad de rol de administrador de sistemas.</p>
+<p>El ámbito del procedimiento almacenado es la biblioteca de destino completa. Contiene metadatos, activadores DDL, arquitectura cdc y usuarios de cdc.</p>
+<p>Utilice el siguiente código para habilitar:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">USE</span> <span style="color:#008080;">AdventureWorks</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#0000FF;">EXECUTE</span> <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_db</span><span style="color:#808080;">;</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Al ejecutar directamente al principio, apareció un mensaje de error:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left">Mensaje 22830, nivel 16, estado 1, procedimiento sp_cdc_enable_db_internal, línea 193</p> <p>No se pueden actualizar los metadatos para indicar que la captura de datos modificados está habilitada para la base de datos AdventureWorks. Falló al ejecutar el comando 'SetCDCTracked (Value = 1)'. El error devuelto fue 15517: 'No se puede ejecutar como principal de base de datos porque el principal "dbo" no existe, no puede simular este tipo de principal o no tiene los permisos necesarios. '. Utilice esta acción y este error para determinar la causa del error y vuelva a enviar la solicitud.</p> </td>
+</tr>
+</tbody>
+</table>
+<p>Aquí hay otro punto de conocimiento: el error del número de error 15517</p>
+<p>Este tipo de error aparecerá en muchos lugares, como al restaurar una base de datos. El punto común es: algunos procedimientos almacenados han utilizado<span style="color:#4B4B4B;">WITHEXECUTE AS</span> Opciones. Haga que tenga una determinada arquitectura en la biblioteca actual, pero cuando se ejecuta en otro lugar, debido a que no existe dicha arquitectura, se informa un error. La solución:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><span style="color:#008000;">ALTER AUTHORIZATION ON DATABASE::[AdventureWorks] TO [sa]</span></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Después de la inspección, el procedimiento almacenado uspUpdateEmployeeHireInfo tiene: WITH EXECUTE AS CALLER</p> </td>
+</tr>
+</tbody>
+</table>
+<p>La razón para usar sa es que incluso si sa está deshabilitado, sa todavía existe. Por lo que no se informará ningún error.</p>
+<p>Ahora ejecute de nuevo:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><span style="color:#0000FF;">USE</span> <span style="color:#008080;">AdventureWorks</span></p> <p><span style="color:#0000FF;">GO</span></p> <p><span style="color:#0000FF;">EXECUTE</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_db</span><span style="color:#808080;">;</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>La activación es exitosa y luego verifique si es exitosa a través de la siguiente declaración:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">SELECT</span>&nbsp; <span style="color:#008080;"> is_cdc_enabled</span><span style="color:#808080;">,</span><span style="color:#0000FF;">CASE</span><span style="color:#0000FF;">WHEN</span> <span style="color:#008080;">is_cdc_enabled</span><span style="color:#808080;">=</span>0<span style="color:#0000FF;">THEN</span> <span style="color:#FF0000;">'CDC</span><span style="color:#FF0000;">Función desactivada</span><span style="color:#FF0000;">'</span><span style="color:#0000FF;">ELSE</span> <span style="color:#FF0000;">'CDC</span><span style="color:#FF0000;">Característica habilitada</span><span style="color:#FF0000;">'</span><span style="color:#0000FF;">END</span> <span style="color:#008080;">descripción</span></p> <p align="left"><span style="color:#0000FF;">FROM</span>&nbsp;&nbsp;&nbsp; <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#00FF00;">databases</span></p> <p><span style="color:#0000FF;">WHERE</span>&nbsp;&nbsp; <span style="color:#008080;">NAME</span> <span style="color:#808080;"> =</span> <span style="color:#FF0000;">'AdventureWorks'</span></p> </td>
+</tr>
+</tbody>
+</table>
+<br>
+</div>
+<div>
+<p>Después de que la creación sea exitosa, el usuario de CDC y la estructura de CDC se agregarán automáticamente.</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/715765770656302b3a507a550d5df06e.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p><span></span>La razón para crear estos dos usuarios y arquitecturas es que CDC requiere el uso exclusivo de estas dos arquitecturas, por lo que deben crearse por separado. Si hay usuarios de CDC y estructuras creadas por funciones que no son de CDC, debe eliminar la estructura nombrada por el cdc antes de poder abrirla.</p>
+<br>
+</div>
+<h2>El segundo paso es habilitar CDC en la tabla de destino:</h2>
+<div>
+<p>Utilice miembros de la función db_owner para ejecutar sys.sp_cdc_enable_table a fin de crear instancias de captura para cada tabla de la que se debe realizar un seguimiento. Luego use la columna is_tracked_by_cdc en la vista de catálogo sys.tables para determinar si la creación es exitosa.</p>
+<p>De forma predeterminada, se capturan todas las columnas de la tabla. Si solo necesita capturar ciertas columnas, puede usar el parámetro @captured_column_list para especificar estas columnas.</p>
+<p>Si desea colocar la tabla de cambios en un grupo de archivos, es mejor crear un grupo de archivos separado (al menos independiente de la tabla de origen).</p>
+<p>&nbsp;</p>
+<p>Si no desea controlar el rol de acceso, @role_name debe<span style="color:#FF0000;">Explícito</span>Establecer en nulo.</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><strong>sys.sp_cdc_enable_table</strong> </p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[ <strong>@source_schema =</strong> ] <strong>'</strong><em>source_schema</em><strong>',</strong></p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[ <strong>@source_name =</strong> ] <strong>'</strong><em>source_name</em><strong>' ,</strong></p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[ <strong>@role_name =</strong> ] <strong>'</strong><em>role_name</em><strong>'</strong></p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[<strong>,</strong>[ <strong>@capture_instance =</strong> ] <strong>'</strong><em>capture_instance</em><strong>'</strong> ]</p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[<strong>,</strong>[ <strong>@supports_net_changes =</strong> ] <em>supports_net_changes</em> ]</p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[<strong>,</strong>[ <strong>@index_name =</strong> ] <strong>'</strong><em>index_name</em><strong>'</strong> ]</p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[<strong>,</strong>[ <strong>@captured_column_list =</strong> ] <strong>'</strong><em>captured_column_list</em><strong>'</strong> ]</p> <p>&nbsp;&nbsp;&nbsp;&nbsp;[<strong>,</strong>[ <strong>@filegroup_name =</strong> ] <strong>'</strong><em>filegroup_name</em><strong>'</strong> ]</p> <p>&nbsp;&nbsp;[<strong>,</strong>[ <strong>@partition_switch =</strong> ] <strong>'</strong><em>partition_switch</em><strong>'</strong> ]</p> </td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>ejemplo:</p>
+<p>Poner<span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span> Esta tabla activa la captura de cambios.</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">USE</span> <span style="color:#008080;">AdventureWorks</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_table</span><span style="color:#008080;">@source_schema</span><span style="color:#808080;">=</span> <span style="color:#FF0000;">'HumanResources'</span><span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp; <span style="color:#008080;">@source_name</span> <span style="color:#808080;"> =</span> <span style="color:#FF0000;">'Department'</span><span style="color:#808080;">,</span><span style="color:#008080;">@role_name</span> <span style="color:#808080;">=</span> <span style="color:#808080;">NULL</span> </p> </td>
+</tr>
+</tbody>
+</table>
+<p>Entonces la consulta es exitosa:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">SELECT</span>&nbsp; <span style="color:#008080;"> name</span> <span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">is_tracked_by_cdc</span> <span style="color:#808080;"> ,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">CASE</span> <span style="color:#0000FF;"> WHEN</span> <span style="color:#008080;">is_tracked_by_cdc</span> <span style="color:#808080;"> =</span> 0 <span style="color:#0000FF;">THEN</span> <span style="color:#FF0000;">'CDC</span><span style="color:#FF0000;">Función desactivada</span><span style="color:#FF0000;">'</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">ELSE</span> <span style="color:#FF0000;"> 'CDC</span><span style="color:#FF0000;">Característica habilitada</span><span style="color:#FF0000;">'</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">END</span> <span style="color:#008080;"> Descripción</span></p> <p align="left"><span style="color:#0000FF;">FROM</span>&nbsp;&nbsp;&nbsp; <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#00FF00;">tables</span></p> <p><span style="color:#0000FF;">WHERE</span>&nbsp;&nbsp; <span style="color:#FF00FF;">OBJECT_ID</span><span style="color:#808080;">=</span> <span style="color:#FF00FF;">OBJECT_ID</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'HumanResources.Department'</span><span style="color:#808080;">)</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Después de abrir la tabla, puede ver muchas más tablas al comienzo de la arquitectura cdc en la siguiente figura:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/7c694da0081995c85a07afa736d5303b.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+Después del inicio, puede ver los trabajos en el Agente SQL Server y estos dos trabajos también aparecen:
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/e11ff384b3fa1b85d0fd7162f1831662.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Los procedimientos almacenados relacionados se enumeran a continuación:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_add_job</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/bb510626(v=sql.90)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_generate_wrapper_function</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-CN/library/cc280643" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_change_job</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/magazine/bb510748.aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_get_captured_columns</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb510701(v=SQL.100).aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_cleanup_change_table</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb510449(v=SQL.100).aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_get_ddl_history</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb522553.aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_disable_db</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/bb522508(v=sql.100)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a>Se recomienda deshabilitar la tabla primero y luego deshabilitar la biblioteca</p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_help_change_data_capture</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-CN/library/bb500302" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_disable_table</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb510702(v=sql.105)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_help_jobs</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/en-us/sysinternals/bb500303" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_drop_job</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-CN/library/bb510746(v=sql.105)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_scan</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/bb522547(v=sql.100)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_enable_db</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-tw/library/bb510486(v=SQL.105).aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_start_job</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/bb510685(v=sql.100)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_enable_table</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-CN/library/bb522475(v=sql.105)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.sp_cdc_stop_job</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb522509(v=SQL.110).aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>función:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p>Cdc.fn_cdc_get_all_changes_&lt;capture_instance&gt;</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb510627.aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a> </p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_has_column_changed</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/bb522479(v=sql.100)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Cdc.fn_cdc_get_net_changes_&lt;capture_instance&gt;</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb522511.aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_increment_lsn</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-tw/library/bb510745(SQL.105).aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_decrement_lsn</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/cc645858(zh-tw).aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_is_bit_set</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb500241(v=sql.100)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_get_column_ordinal</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/bb522549(v=sql.100)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_map_lsn_to_time</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb522507(v=sql.105)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_get_max_lsn</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/magazine/bb500304.aspx" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_map_time_to_lsn</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb500137" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+<tr>
+<td valign="top"> <p>Sys.fn_cdc_get_min_lsn</p> </td>
+<td valign="top"> <p><a href="https://technet.microsoft.com/zh-cn/library/bb510621(v=sql.105)" rel="nofollow,noindex" target="_blank">Descripción y ejemplos</a></p> </td>
+</tr>
+</tbody>
+</table>
+<br>
+</div>
+<h1>Caso:</h1>
+<div>
+<p>Comencemos con un caso práctico de principio a fin:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/0f8ca8baa172ac17a10c514911a2404a.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Primero verifique el contenido de la biblioteca original: puede ver que solo hay una tabla dbo.sysdiagrams en la tabla del sistema</p>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/12dc0cf9d3eaab683d61ca8fa53e76c9.png" alt="">
+<br>
+</div>
+<div>
+<p>Luego mire al Agente SQLServer: puede ver que no hay trabajos relacionados</p>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/f312c331a184ea401c364adb6f349892.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<h2>Paso 2: habilite la función de nivel de base de datos de CDC para la base de datos. Debe estar habilitado explícitamente:</h2>
+<div>
+<p>Paso 1, ejecute la siguiente declaración:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">USE</span> <span style="color:#008080;">AdventureWorks</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_db</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Algunas bases de datos pueden tener algunos procedimientos almacenados que contienen declaraciones como ejecutar como, y se informará un error en este momento:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/a46ef52e82117107b8e3533b7f839a6a.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>descripción de la palabra:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left">Mensaje 22830, nivel 16, estado 1, procedimiento sp_cdc_enable_db_internal, línea 186</p> <p align="left">No se pueden actualizar los metadatos para indicar que la captura de datos modificados está habilitada para la base de datos AdventureWorks. Falló al ejecutar el comando 'SetCDCTracked (Value = 1)'. El error devuelto fue 15517: 'No se puede ejecutar como principal de base de datos porque el principal "dbo" no existe, no puede simular este tipo de principal o no tiene los permisos necesarios. '. Utilice esta acción y este error para determinar la causa del error y vuelva a enviar la solicitud.</p> <p align="left">Mensaje 266, nivel 16, estado 2, procedimiento sp_cdc_enable_db_internal, línea 0</p> <p align="left">El recuento de transacciones después de EXECUTE indica que el número de instrucciones BEGIN y COMMIT no coincide. Recuento anterior = 0, recuento actual = 1.</p> <p align="left">Mensaje 266, nivel 16, estado 2, procedimiento sp_cdc_enable_db, línea 0</p> <p align="left">El recuento de transacciones después de EXECUTE indica que el número de instrucciones BEGIN y COMMIT no coincide. Recuento anterior = 0, recuento actual = 1.</p> <p align="left">Mensaje 3998, nivel 16, estado 1, línea 1</p> <p align="left">Se detectó una transacción no comprometida al final del lote. La transacción se revertirá.</p> </td>
+</tr>
+</tbody>
+</table>
+<p>Si se produce este error, la solución actual es ejecutar la siguiente declaración, el motivo se ha explicado al principio, para las bibliotecas que no usan EXECUTE AS, generalmente no existe tal problema:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><span style="color:#0000FF;">ALTER</span> <span style="color:#0000FF;">AUTHORIZATION</span> <span style="color:#0000FF;">ON</span> <span style="color:#0000FF;">DATABASE</span><span style="color:#808080;">::</span><span style="color:#008080;">[AdventureWorks]</span> <span style="color:#0000FF;">TO</span> <span style="color:#008080;">[sa]</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Luego ejecútelo nuevamente, se abrió con éxito:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">USE</span> <span style="color:#008080;">AdventureWorks</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_db</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Ahora compruebe si tiene éxito:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">SELECT</span>&nbsp; <span style="color:#008080;"> is_cdc_enabled</span> <span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">CASE</span> <span style="color:#0000FF;"> WHEN</span> <span style="color:#008080;">is_cdc_enabled</span> <span style="color:#808080;"> =</span> 0 <span style="color:#0000FF;">THEN</span> <span style="color:#FF0000;">'CDC</span><span style="color:#FF0000;">Función desactivada</span><span style="color:#FF0000;">'</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">ELSE</span> <span style="color:#FF0000;"> 'CDC</span><span style="color:#FF0000;">Característica habilitada</span><span style="color:#FF0000;">'</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">END</span> <span style="color:#008080;"> Descripción</span></p> <p align="left"><span style="color:#0000FF;">FROM</span>&nbsp;&nbsp;&nbsp; <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#00FF00;">databases</span></p> <p align="left"><span style="color:#0000FF;">WHERE</span>&nbsp;&nbsp; <span style="color:#008080;"> NAME</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">'AdventureWorks'</span></p> </td>
+</tr>
+</tbody>
+</table>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/979e1a52f76805d2bf3d444d51005ed2.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Ahora revisa la lista y la tarea:</p>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/57a19baf676ba742ff3823e48d5da57c.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>La tarea no ha cambiado</p> Hay más permisos de función:
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/c249637d0ac9643fd0440d71ecc87eb2.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<h2>Paso 3: active la captura para algunas tablas:</h2>
+<div>
+<p>Elige aqui<span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span><span style="color:#FF0000;">、</span><span style="color:#008080;">Person</span><span style="color:#808080;">.</span><span style="color:#0000FF;">ADDRESS</span><span style="color:#FF0000;">、</span><span style="color:#008080;">Person</span><span style="color:#808080;">.</span><span style="color:#008080;">Contact </span>Encender:</p>
+<p>Primero mira el look antes de abrir:</p>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/c5734978f4c982ddf3d6fd6f730492eb.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Luego abre la mesa:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">USE</span> <span style="color:#008080;">AdventureWorks</span><span style="color:#808080;">;</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#0000FF;">EXECUTE</span> <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_table</span></p> <p align="left"><span style="color:#0000FF;">&nbsp;&nbsp;&nbsp; </span><span style="color:#008080;">@source_schema</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'HumanResources'</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@source_name</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'Department'</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@role_name</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'cdc_Admin'</span><span style="color:#008000;">--</span><span style="color:#008000;">Se puede crear automáticamente</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@capture_instance</span><span style="color:#808080;">=</span><span style="color:#0000FF;">DEFAULT</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Los resultados se muestran en la figura:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/761e9cac968b8c00f681aaa52f3e1725.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+Puede ver que durante la creación, también se crearon dos trabajos: cdc.AdventureWorks_cleanup y cdc.AdventureWorks_capture
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/edf0e759110fa70014e2100ee7bb93be.png" alt="">
+<br>
+</div>
+<div>
+<p>También puede ver que hay un rol adicional CDC_ADMIN, que se crea dinámicamente en la declaración anterior:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/822630a72920c0097a4046ceae2a1817.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Siga los pasos anteriores para abrir las otras dos tablas:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">USE</span> <span style="color:#008080;">AdventureWorks</span><span style="color:#808080;">;</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#0000FF;">EXECUTE</span> <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_table</span></p> <p align="left"><span style="color:#0000FF;">&nbsp;&nbsp;&nbsp; </span><span style="color:#008080;">@source_schema</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'Person'</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@source_name</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'ADDRESS'</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@role_name</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'cdc_Admin'</span><span style="color:#008000;">--</span><span style="color:#008000;">Se puede crear automáticamente</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@capture_instance</span><span style="color:#808080;">=</span><span style="color:#0000FF;">DEFAULT</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#0000FF;">EXECUTE</span> <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_enable_table</span></p> <p align="left"><span style="color:#0000FF;">&nbsp;&nbsp;&nbsp; </span><span style="color:#008080;">@source_schema</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'Person'</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@source_name</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'Contact'</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@role_name</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'cdc_Admin'</span><span style="color:#008000;">--</span><span style="color:#008000;">Se puede crear automáticamente</span></p> <p align="left">&nbsp; <span style="color:#808080;">,</span> <span style="color:#008080;">@capture_instance</span><span style="color:#808080;">=</span><span style="color:#0000FF;">DEFAULT</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Puede ver en la tabla del sistema:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/79764508705b5500f52f53eb8e958268.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<p> </p>
+<p> </p>
+<p>Hay 3 mesas, y es la mesa con la función CDC recién activada. Ahora, verifiquemos si la puesta en marcha es exitosa:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">SELECT</span>&nbsp; <span style="color:#008080;"> name</span> <span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">is_tracked_by_cdc</span> <span style="color:#808080;"> ,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">CASE</span> <span style="color:#0000FF;"> WHEN</span> <span style="color:#008080;">is_tracked_by_cdc</span> <span style="color:#808080;"> =</span> 0 <span style="color:#0000FF;">THEN</span> <span style="color:#FF0000;">'CDC</span><span style="color:#FF0000;">Función desactivada</span><span style="color:#FF0000;">'</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">ELSE</span> <span style="color:#FF0000;"> 'CDC</span><span style="color:#FF0000;">Característica habilitada</span><span style="color:#FF0000;">'</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">END</span> <span style="color:#008080;"> Descripción</span></p> <p align="left"><span style="color:#0000FF;">FROM</span>&nbsp;&nbsp;&nbsp; <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#00FF00;">tables</span></p> <p align="left"><span style="color:#0000FF;">WHERE</span>&nbsp;&nbsp; <span style="color:#FF00FF;"> OBJECT_ID</span> <span style="color:#808080;">IN</span><span style="color:#808080;">(</span> <span style="color:#FF00FF;">OBJECT_ID</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'HumanResources.Department'</span><span style="color:#808080;">),</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#FF00FF;">OBJECT_ID</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'Person.ADDRESS'</span><span style="color:#808080;">),</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#FF00FF;">OBJECT_ID</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'Person.Contact'</span><span style="color:#808080;">)</span> <span style="color:#808080;">)</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Los resultados son los siguientes:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/6f066f43e32906c6a8c14adccc74b4c0.png" alt="">
+<br>
+<p><br></p>
+<h2>Paso 3: inspección:</h2>
+</div>
+</div>
+<div>
+Cambiemos los datos:
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/b60a9c198a7062fac5048e763c3b9ddf.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Luego copie los datos en la tabla:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">INSERT</span>&nbsp; <span style="color:#0000FF;"> INTO</span> <span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span></p> <p align="left"><span style="color:#0000FF;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span style="color:#808080;">(</span> <span style="color:#008080;">Name</span> <span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">GroupName</span> <span style="color:#808080;"> ,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">ModifiedDate</span> </p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#808080;">)</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">SELECT</span>&nbsp; <span style="color:#008080;"> Name</span> <span style="color:#808080;">+</span> <span style="color:#FF0000;">'1'</span> <span style="color:#808080;"> ,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">GroupName</span> <span style="color:#808080;"> +</span> <span style="color:#FF0000;">'1'</span> <span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#FF00FF;">GETDATE</span><span style="color:#808080;">()</span> <span style="color:#008080;">ModifiedDate</span></p> <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">FROM</span>&nbsp;&nbsp;&nbsp; <span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span> </p> </td>
+</tr>
+</tbody>
+</table>
+<p>Los resultados son los siguientes:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/e86791dd9ee1f9b14af5bfff196a00a6.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+Entonces de<span style="color:#008080;">cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">HumanResources_Department_CT</span> Consulta de tabla:
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/f832aac2e9a8c2be81a032e93aa0fd89.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Puede ver que de hecho hay 16 registros más. Esta parte del registro demuestra que hasta ahora se han cambiado 16 datos del monitoreo, ahora cambiémoslo nuevamente:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><span style="color:#0000FF;">DELETE</span>&nbsp; <span style="color:#0000FF;">FROM</span> <span style="color:#008080;"> HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span> <span style="color:#0000FF;">WHERE</span> <span style="color:#008080;">DepartmentID</span><span style="color:#808080;">&gt;</span>17</p> </td>
+</tr>
+</tbody>
+</table>
+<p>Consulte la tabla cdc nuevamente, puede ver que hay 16 registros más:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/6475b967b0f1d060ab3a2cceb04d58fc.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Ahora, experimentemos con la actualización:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><span style="color:#0000FF;">UPDATE</span>&nbsp; <span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span> <span style="color:#0000FF;">SET</span> <span style="color:#008080;">ModifiedDate</span><span style="color:#808080;">=</span><span style="color:#FF00FF;">GETDATE</span><span style="color:#808080;">()</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Revisar otra vez:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/8ad8c93c722d96e724179da6508b1e00.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Ahora analicemos esta tabla:</p>
+<p>Puede verlo en Libros en pantalla: cdc. &lt;instancia_captura&gt; _CT Puede ver que la tabla nombrada de esta manera es una tabla que se usa para registrar cambios en la tabla fuente. Para las operaciones de inserción / eliminación, habrá una fila de registros correspondiente, y para la actualización, habrá dos filas de registros.</p>
+<p>Para la columna de operación __ $: 1 = eliminar, 2 = insertar, 3 = actualizar (valor anterior), 4 = actualizar (valor nuevo)</p>
+<p>Para la columna __ $ start_lsn: dado que el cambio es el registro de transacciones de la fuente y la base de datos, el número de secuencia inicial (LSN) de su registro de transacciones se guardará aquí</p>
+<p>Pero Microsoft no comprueba y consulta directamente este tipo de tabla, se recomienda utilizar<span style="color:#008080;">cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_get_all_changes_</span><span style="color:#808080;">&lt;</span><span style="color:#008080;">Capturar instancia</span><span style="color:#808080;">&gt; </span>con<span style="color:#008080;">cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_get_net_changes_</span><span style="color:#808080;">&lt;</span><span style="color:#008080;">capture_instance</span><span style="color:#808080;">&gt;&nbsp; </span>Para consultar</p>
+<p>&nbsp;</p> De ahora en adelante, familiaricémonos con el uso de varias funciones y procedimientos almacenados, e intentemos algunas operaciones anormales.
+<br>
+</div>
+<div>
+<br>
+</div>
+<h1>Escenarios de uso diario:</h1>
+<h2>1. Consulta las instancias capturadas que se han abierto:</h2>
+<div>
+<p>Dado que es posible que no recuerde o no sepa qué captura de tabla está habilitada, puede usar la siguiente declaración para buscar:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">--</span><span style="color:#0000FF;">Devolver información de configuración de captura de cambios para todas las tablas</span></p> <p align="left"><span style="color:#0000FF;">EXECUTE</span> <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_help_change_data_capture</span><span style="color:#808080;">;</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Puedes ver la siguiente captura de pantalla:</p>
+<p><img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/6508078bfd043c5104a61e600a691223.png" alt=""><br></p>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Compruebe qué columnas de una instancia (es decir, una tabla) se han capturado y supervisado:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_get_captured_columns</span></p> <p><span style="color:#008080;">@capture_instance</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">'HumanResources_Department'</span> <span style="color:#008000;"> -- sysname</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Obtenga la siguiente imagen:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/aa05c52f76a8500927da57bed3d749ff.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>También puede encontrar información de configuración en lo siguiente:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><span style="color:#0000FF;">SELECT</span> <span style="color:#808080;">*</span> <span style="color:#0000FF;"> FROM</span> <span style="color:#008080;">msdb</span><span style="color:#808080;">.</span><span style="color:#008080;">dbo</span><span style="color:#808080;">.</span><span style="color:#008080;">cdc_jobs</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Como se muestra:</p>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/fd6b04f1ceceb1848e5b34c02969cbbb.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<h2>2. Vea la configuración actual usando sp_cdc_help_jobs:</h2>
+<div>
+<p>Como puede ver en lo anterior, después de habilitar cdc, se crearán dos trabajos automáticamente. Primero puede usar la siguiente declaración para ver:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p><span style="color:#800000;">sp_cdc_help_jobs</span></p> </td>
+</tr>
+</tbody>
+</table> El resultado:
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/52bbe34c922078c29df3688fe15b3751.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Para un sistema OLTP grande, dado que los cambios de datos son muy frecuentes, habrá una gran cantidad de datos en la tabla de cambios. Si se almacena durante demasiado tiempo (el más largo se puede almacenar durante 100 años), será un gran desafío para el espacio de la base de datos. En este momento, puede ajustar la imagen de arriba<span style="color:#008080;">cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">AdventureWorks_cleanup </span>Retención media (unidad: minutos).</p>
+<br>
+</div>
+<h2>3. Modifique la configuración: sp_cdc_change_job:</h2>
+<div>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Mostrar la configuración original:</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#800000;">sp_cdc_help_jobs</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Cambiar el tiempo de retención de datos a minutos</span></p> <p align="left"><span style="color:#0000FF;">EXECUTE</span> <span style="color:#00FF00;"> sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_change_job</span></p> <p align="left"><span style="color:#0000FF;">&nbsp;&nbsp;&nbsp; </span><span style="color:#008080;">@job_type</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'cleanup'</span><span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp; <span style="color:#008080;">@retention</span><span style="color:#808080;">=</span>100</p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Desactivar operación</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_stop_job</span><span style="color:#FF0000;">N'cleanup'</span> </p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Habilitar trabajo</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_start_job</span><span style="color:#FF0000;">N'cleanup'</span> </p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Revisar otra vez</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#800000;">sp_cdc_help_jobs</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Obtenga los siguientes resultados:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/19a2fab9f32542f270acb5593a86ae98.png" alt="">
+<br>
+</div>
+<div>
+Demuestra que la modificación se realizó correctamente. Tenga en cuenta que después de la modificación, primero debe deshabilitarla (si está habilitada) y luego habilitarla para que surta efecto.
+<br>
+</div>
+<div>
+<br>
+</div>
+<h2>4. Detener / habilitar, eliminar / crear trabajo:</h2>
+<div>
+<p>Para detener / iniciar un trabajo, puede utilizar la siguiente declaración:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Desactivar operación</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_stop_job</span><span style="color:#FF0000;">N'cleanup'</span> </p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Habilitar trabajo</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_start_job</span><span style="color:#FF0000;">N'cleanup'</span> </p> <p align="left"><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Eliminar trabajo:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_drop_job</span><span style="color:#008080;">@job_type</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'cleanup'</span> <span style="color:#008000;"> -- nvarchar(20)</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Ver tarea</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_help_jobs</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Puedes ver que solo queda un trabajo:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/ddc43cb9077e109c39a195d37ef4ce34.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Crear tarea:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_add_job</span></p> <p align="left"><span style="color:#0000FF;">&nbsp;&nbsp;&nbsp; </span><span style="color:#008080;">@job_type</span> <span style="color:#808080;">=</span> <span style="color:#FF0000;">N'cleanup'</span><span style="color:#808080;">,</span> </p> <p align="left">&nbsp;&nbsp;&nbsp; <span style="color:#008080;">@start_job</span> <span style="color:#808080;"> =</span> 0<span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp; <span style="color:#008080;">@retention</span> <span style="color:#808080;"> =</span> 5760</p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Ver tarea</span></p> <p align="left"><span style="color:#0000FF;">EXEC</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#800000;">sp_cdc_help_jobs</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>A continuación puede ver que se ha creado correctamente:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/9db2fadeb53dc4f3981bfd5de0446bff.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<h2>5. Captura de cambios DDL:</h2>
+<div>
+<p>Además de capturar cambios en los datos, CDC también puede capturar cambios en las operaciones de DDL. La premisa es asegurar que el agente SQL Server esté habilitado primero, de hecho, la función CDC necesita asegurar el funcionamiento normal del agente SQL, porque todas las operaciones se implementan a través de dos trabajos en el agente.</p>
+<p>Ahora mismo<span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span> Modifique la tabla para alargar la longitud del nombre:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">ALTER</span> <span style="color:#0000FF;">TABLE</span> <span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span> <span style="color:#0000FF;">ALTER</span> <span style="color:#0000FF;">COLUMN</span> <span style="color:#008080;"> Name</span> <span style="color:#0000FF;">NVARCHAR</span><span style="color:#808080;">(</span>120<span style="color:#808080;">)</span> <span style="color:#808080;">;</span></p> <p><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Luego consulte la tabla de registros ddl:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">SELECT</span>&nbsp; <span style="color:#808080;"> *</span></p> <p><span style="color:#0000FF;">FROM</span>&nbsp;&nbsp;&nbsp; <span style="color:#008080;">cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">ddl_history</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>puede ser visto:</p>
+</div>
+<div>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/016a93c834b459e64386bdbd06b62367.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+Como lo intenté varias veces antes de tomar la captura de pantalla, hay 3 datos en ella. La razón por la que lo intenté varias veces es porque, como se mencionó anteriormente, olvidé abrir el agente SQL, por lo que no se pueden encontrar los datos, así que recuerde abrir el agente SQL.
+<br>
+</div>
+<div>
+<br>
+</div>
+<h2>6. Utilice la función de CDC para obtener los cambios:</h2>
+<div>
+<p>A. Utilice la función cdc.fn_cdc_get_all_changes_HumanResources_Department para informar todos los cambios disponibles actuales de la instancia capturada de HumanResources_Department:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">DECLARE</span> <span style="color:#008080;"> @from_lsn</span> <span style="color:#0000FF;">binary</span><span style="color:#808080;">(</span>10<span style="color:#808080;">),</span> <span style="color:#008080;">@to_lsn</span> <span style="color:#0000FF;">binary</span><span style="color:#808080;">(</span>10<span style="color:#808080;">)</span></p> <p align="left"><span style="color:#0000FF;">SET</span> <span style="color:#008080;">@from_lsn</span> <span style="color:#808080;">=</span></p> <p align="left">&nbsp;&nbsp; <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_get_min_lsn</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'HumanResources_Department'</span><span style="color:#808080;">)</span></p> <p align="left"><span style="color:#0000FF;">SET</span> <span style="color:#008080;">@to_lsn</span>&nbsp;&nbsp; <span style="color:#808080;">=</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_get_max_lsn</span><span style="color:#808080;">()</span></p> <p align="left"><span style="color:#0000FF;">SELECT</span> <span style="color:#808080;">*</span> <span style="color:#0000FF;">FROM</span> <span style="color:#008080;">cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_get_all_changes_HumanResources_Department</span></p> <p align="left"><span style="color:#0000FF;">&nbsp; </span><span style="color:#808080;">(</span><span style="color:#008080;">@from_lsn</span><span style="color:#808080;">,</span> <span style="color:#008080;">@to_lsn</span><span style="color:#808080;">,</span> <span style="color:#FF0000;"> N'all update old'</span><span style="color:#808080;">);</span></p> <p align="left"><span style="color:#0000FF;">GO</span></p> </td>
+</tr>
+</tbody>
+</table>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/e8d433817216206c16e90f62882769ac.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>B. Obtenga la información de cambio de un período de tiempo determinado:</p>
+<p>Primero obtenga los datos de cambio de seguimiento de acuerdo con el número de secuencia de registro (número de secuencia de registro, LSN):</p>
+<p>Sys.fn_cdc_map_time_to_lsn obtiene los valores LSN máximo y mínimo dentro del rango modificado. puedo usar:</p>
+<p>Smallest greater than;smallest greater than orequal;largest less than;largest less than or equal.</p>
+<p>Por ejemplo, consulte los datos insertados en un período de tiempo determinado:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Insertar datos</span></p> <p align="left"><span style="color:#0000FF;">INSERT</span> <span style="color:#0000FF;">INTO</span> <span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span><span style="color:#808080;">(</span><span style="color:#008080;">name</span><span style="color:#808080;">,</span><span style="color:#008080;">GroupName</span><span style="color:#808080;">,</span><span style="color:#008080;">ModifiedDate</span><span style="color:#808080;">)</span></p> <p align="left"><span style="color:#0000FF;">VALUES</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'test'</span><span style="color:#808080;">,</span><span style="color:#FF0000;">'abc'</span><span style="color:#808080;">,</span><span style="color:#FF00FF;">GETDATE</span><span style="color:#808080;">())</span></p> <p align="left"><span style="color:#0000FF;">INSERT</span> <span style="color:#0000FF;">INTO</span> <span style="color:#008080;">HumanResources</span><span style="color:#808080;">.</span><span style="color:#008080;">Department</span><span style="color:#808080;">(</span><span style="color:#008080;">name</span><span style="color:#808080;">,</span><span style="color:#008080;">GroupName</span><span style="color:#808080;">,</span><span style="color:#008080;">ModifiedDate</span><span style="color:#808080;">)</span></p> <p align="left"><span style="color:#0000FF;">VALUES</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'test1'</span><span style="color:#808080;">,</span><span style="color:#FF0000;">'abc1'</span><span style="color:#808080;">,</span><span style="color:#FF00FF;">GETDATE</span><span style="color:#808080;">())</span></p> <p align="left"><span style="color:#0000FF;">go</span></p> <p align="left"><span style="color:#008000;">--</span><span style="color:#008000;">Comprobar datos</span></p> <p align="left"><span style="color:#0000FF;">DECLARE</span> <span style="color:#008080;"> @bglsn</span> <span style="color:#0000FF;">VARBINARY</span><span style="color:#808080;">(</span>10<span style="color:#808080;">)=</span><span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_map_time_to_lsn</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'smallest greater than or equal'</span><span style="color:#808080;">,</span><span style="color:#FF0000;">'2012-10-12 12:00:00.997'</span><span style="color:#808080;">)</span></p> <p align="left"><span style="color:#0000FF;">DECLARE</span> <span style="color:#008080;"> @edlsn</span> <span style="color:#0000FF;">VARBINARY</span><span style="color:#808080;">(</span>10<span style="color:#808080;">)=</span><span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_map_time_to_lsn</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'largest less than or equal'</span><span style="color:#808080;">,</span><span style="color:#FF00FF;">GETDATE</span><span style="color:#808080;">())</span></p> <p align="left"><span style="color:#0000FF;">SELECT</span> <span style="color:#008080;">DepartmentID</span><span style="color:#808080;">,</span><span style="color:#008080;">GroupName</span><span style="color:#808080;">,</span><span style="color:#008080;">Name</span></p> <p align="left"><span style="color:#0000FF;">FROM</span> <span style="color:#008080;">cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">HumanResources_Department_CT</span> </p> <p><span style="color:#0000FF;">WHERE</span> <span style="color:#008080;">[__$operation]</span><span style="color:#808080;">=</span>2 <span style="color:#808080;">AND</span> <span style="color:#008080;">[__$start_lsn]</span> <span style="color:#808080;">BETWEEN</span> <span style="color:#008080;">@bglsn</span> <span style="color:#808080;"> AND</span> <span style="color:#008080;">@edlsn</span></p> </td>
+</tr>
+</tbody>
+</table>
+<p>Obtenga los siguientes resultados:</p>
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/a1af440d0426cc39cd8a74b0a4420e17.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>C. sys.fn_cdc_map_lsn_to_time hora de cambio de consulta:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">SELECT</span>&nbsp; <span style="color:#008080;"> [__$operation]</span> <span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">CASE</span> <span style="color:#008080;"> [__$operation]</span> <span style="color:#0000FF;">WHEN</span> 1 <span style="color:#0000FF;"> THEN</span> <span style="color:#FF0000;">'</span><span style="color:#FF0000;">Eliminar</span><span style="color:#FF0000;">'</span> <span style="color:#0000FF;">WHEN</span> 2 <span style="color:#0000FF;">THEN</span> <span style="color:#FF0000;"> '</span><span style="color:#FF0000;">insertar</span><span style="color:#FF0000;">'</span> <span style="color:#0000FF;"> WHEN</span> 3 <span style="color:#0000FF;">THEN</span> <span style="color:#FF0000;">'</span><span style="color:#FF0000;">Actualizar (el valor de la columna capturado es el valor antes de la operación de actualización)</span><span style="color:#FF0000;">'</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#0000FF;">WHEN</span> 4 <span style="color:#0000FF;"> THEN</span> <span style="color:#FF0000;">'</span><span style="color:#FF0000;">Actualizar (el valor de la columna capturado es el valor después de la operación de actualización)</span><span style="color:#FF0000;">'</span> <span style="color:#0000FF;">END</span> <span style="color:#008080;">[</span><span style="color:#008080;">Tipos de</span><span style="color:#008080;">]</span><span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_map_lsn_to_time</span><span style="color:#808080;">(</span><span style="color:#008080;">[__$start_lsn]</span><span style="color:#808080;">)</span> <span style="color:#008080;">[</span><span style="color:#008080;">Cambio de hora</span><span style="color:#008080;">]</span> <span style="color:#808080;">,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">name</span> <span style="color:#808080;"> ,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">DepartmentID</span> <span style="color:#808080;"> ,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">GroupName</span> <span style="color:#808080;"> ,</span></p> <p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#008080;">ModifiedDate</span></p> <p align="left"><span style="color:#0000FF;">FROM</span>&nbsp;&nbsp;&nbsp; <span style="color:#008080;"> cdc</span><span style="color:#808080;">.</span><span style="color:#008080;">HumanResources_Department_CT</span> </p> </td>
+</tr>
+</tbody>
+</table>
+<p>resultado:</p>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/b37636daa66d620f698877c5e3b5ba78.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<p>Tenga en cuenta que dado que esta tabla tiene un campo de fecha de modificación, es la misma que la hora de cambio.</p>
+<p>&nbsp;</p>
+<p>D. Obtenga el límite de LSN:</p>
+<table border="1">
+<tbody>
+<tr>
+<td valign="top"> <p align="left"><span style="color:#0000FF;">SELECT</span> <span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_get_max_lsn</span><span style="color:#808080;">()</span><span style="color:#008080;">[</span><span style="color:#008080;">Máximo a nivel de base de datos</span><span style="color:#008080;">LSN]</span><span style="color:#808080;">,</span></p> <p><span style="color:#00FF00;">sys</span><span style="color:#808080;">.</span><span style="color:#008080;">fn_cdc_get_min_lsn</span><span style="color:#808080;">(</span><span style="color:#FF0000;">'cdc.HumanResources_Department_CT'</span><span style="color:#808080;">)</span><span style="color:#008080;">[</span><span style="color:#008080;">Capturar instancia</span><span style="color:#008080;">lsn]</span></p> </td>
+</tr>
+</tbody>
+</table> Los resultados son los siguientes:
+<br>
+</div>
+<div>
+<img src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/1dfee84160c93055e25c7b62b6ea65c6.png" alt="">
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+Estos dos valores se pueden utilizar para filtrar datos en las funciones mencionadas anteriormente.
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+Lo anterior son los resultados registrados durante la prueba, puede haber muchos lugares unilaterales, bienvenido a hacer un ladrillo
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+<div>
+<br>
+</div>
+</div>
+</div></div>
+<div id="contentbelowads" style="width:100%;text-align:center;padding-top:10px;">
+<iframe id="programmerclick.com_728x90_responsive_6_DFP" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" width="1" height="1" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/saved_resource(2).html"></iframe>
+<script>
+    (function () {
+        var size='728x90|300x250',
+            adunit = 'programmerclick.com_728x90_responsive_6_DFP',
+            childNetworkId = '22396446015',
+            xmlhttp = new XMLHttpRequest();xmlhttp.onreadystatechange = function(){if(xmlhttp.readyState==4 && xmlhttp.status==200){var iframe=document.getElementById(adunit).contentWindow.document;iframe.open();iframe.write(xmlhttp.responseText);iframe.close();}};var child=childNetworkId.trim()?','+childNetworkId.trim():'';xmlhttp.open("GET", 'https://pubads.g.doubleclick.net/gampad/adx?iu=/147246189'+child+'/'+adunit+'&sz='+encodeURI(size)+'&t=Placement_type%3Dserving&'+Date.now(), true);xmlhttp.send();})();
+</script>
+</div>
+<div style="clear:both;"></div>
+<hr>
+<h3><span>Recomendación Inteligente</span></h3>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<div class="loop-thumb">
+<a href="https://www.programmerclick.com/article/2316808236/"><img style="width:172px;height:120px;" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/b4771b592ef82bcda529bde583f36b7c.png">
+</a>
+</div>
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/2316808236/" rel="bookmark" title="Leetcode # 144. Pedido anticipado del árbol binario, implementación de C ++">Leetcode # 144. Pedido anticipado del árbol binario, implementación de C ++</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">Tabla de contenido 1. Título 2. Método uno recursión 2.1 Código 2.2 Resultados 3. Método dos no recursivo 3.1 Código 3.2 Resultados 1. Título 2. M&amp;eacu...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<div class="loop-thumb">
+<a href="https://www.programmerclick.com/article/9028746631/"><img style="width:172px;height:120px;" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/8bb8cc8951aa3bc7d2155781827d4453.png">
+</a>
+</div>
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/9028746631/" rel="bookmark" title="Conocimiento relacionado con la versión de Android">Conocimiento relacionado con la versión de Android</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">Reimpreso en: https://blog.csdn.net/wenzhi20102321/article/details/62044892 1. Conceptos básicos de la versión. Los atributos de control de versión incluyen versionCode y versionN...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<div class="loop-thumb">
+<a href="https://www.programmerclick.com/article/91931380402/"><img style="width:172px;height:120px;" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/6c74cfe1c3494ac450e95884ee7955b7.JPEG">
+</a>
+</div>
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/91931380402/" rel="bookmark" title="Clasificación de colinas">Clasificación de colinas</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">La idea básica del método de clasificación Hill es: primero seleccione el primer número entero y divida todos los registros del archivo para clasificarlos en grupos. Por ej...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/9042655987/" rel="bookmark" title="Cadena-AC autómata-presión dp">Cadena-AC autómata-presión dp</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">La idea principal: Dadas las cadenas m 01, pregunte cuántas cadenas de palíndromo inverso 01 de longitud 2n contienen estas cadenas m. Una cadena 01 se llama anti-palíndromo si y ...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<div class="loop-thumb">
+<a href="https://www.programmerclick.com/article/8679225001/"><img style="width:172px;height:120px;" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/33940cfc7537ac68d0b8a1f5f7a984a4.JPEG">
+</a>
+</div>
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/8679225001/" rel="bookmark" title="Semáforo">Semáforo</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">Semáforo Breve introduccion Un semáforo Semaphore es un contador que controla el acceso a múltiples recursos compartidos. Al igual que CountDownLatch, es esencialmente un "Ce...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="rightads2" style="width:100%;height:90px;margin-top:10px;margin-bottom:10px;" class="adsloading">
+<div id="79041-1"><script src="https://ads.themoneytizer.com/s/gen.js?type=1"></script><script src="https://ads.themoneytizer.com/s/requestform.js?siteId=79041&amp;formatId=1"></script></div>
+</div>
+<h3><span>También te puede interesar</span></h3>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/52672284264/" rel="bookmark" title="Hash Storage en Redis (3)">Hash Storage en Redis (3)</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">Esto es muy similar a HashMap en Java, por lo que es muy simple, es muy adecuado para almacenar un papel u objeto correspondientes, como la cuenta y la contraseña, la cuenta no permite duplicar...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/14322742644/" rel="bookmark" title="recover/panic">recover/panic</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">El pánico detendrá el programa, con el fin de evitar que tales problemas causados ​​por PANÁNT, debe sobrescribir el panico. El uso del dolor es: usado para lanzar un error. Recup...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/3879532504/" rel="bookmark" title="Java Constructor relevent stuffs">Java Constructor relevent stuffs</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">Java Constructor relevent stuffs El rol de Constructor es estandarizar la plantilla al generar objetos usando una clase como plantilla ** 1. El papel básico del ejemplo del constructor. ** Si n...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/10432173633/" rel="bookmark" title="¿Qué significa " chmod="" 666?"="">¿Qué significa "Chmod 666?</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">Hoy, veré el puerto serie en el código fuente de Android. Hay un comando para ser Chmod 666. Sé que 777 está todo autorizado. El 666 no es mucho. Los resultados de la consu...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div>
+<div style="padding-top:6px;padding-bottom:6px;">
+<div class="loop-wrap clearfix">
+<header class="loop-data">
+<h3 style="margin-top:0px;border-bottom-style: none;padding-bottom: 0px;margin-bottom: 0px;line-height:30px;font-size: 22px;font-weight: bold;">
+<a href="https://www.programmerclick.com/article/9395737728/" rel="bookmark" title="python: modificación de la tabla de información del empleado">python: modificación de la tabla de información del empleado</a>
+</h3>
+</header>
+<div class="mh-excerpt">
+<p style="line-height:25px;word-break: break-all;">&nbsp;...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="rightads3" style="width:100%;height:90px;margin-top:10px;margin-bottom:10px;" class="adsloading">
+<div id="79041-28"><script src="https://ads.themoneytizer.com/s/gen.js?type=28"></script><script src="https://ads.themoneytizer.com/s/requestform.js?siteId=79041&amp;formatId=28"></script></div>
+</div>
+</div>
+<div class="columns large-4 large-offset-1 sidebar" style="position: -webkit-sticky;position: sticky;top: 0;">
+<div id="leftads0">
+<iframe id="programmerclick.com_300x250_responsive_3_DFP" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" width="1" height="1" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/saved_resource(3).html"></iframe>
+<script>
+    (function () {
+        var size='300x250',
+            adunit = 'programmerclick.com_300x250_responsive_3_DFP',
+            childNetworkId = '22396446015',
+            xmlhttp = new XMLHttpRequest();xmlhttp.onreadystatechange = function(){if(xmlhttp.readyState==4 && xmlhttp.status==200){var iframe=document.getElementById(adunit).contentWindow.document;iframe.open();iframe.write(xmlhttp.responseText);iframe.close();}};var child=childNetworkId.trim()?','+childNetworkId.trim():'';xmlhttp.open("GET", 'https://pubads.g.doubleclick.net/gampad/adx?iu=/147246189'+child+'/'+adunit+'&sz='+encodeURI(size)+'&t=Placement_type%3Dserving&'+Date.now(), true);xmlhttp.send();})();
+</script>
+</div>
+<h3 class="page-title services" style="margin-top:0px;">Artículos relacionados</h3>
+<ul>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/91761290651/" title="Utilice CDC para capturar cambios de datos de SQLSERVER">Utilice CDC para capturar cambios de datos de SQLSERVER</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/1527292868/" title="Nueva captura de datos de cambios (CDC) y seguimiento de cambios en SQL Server 2008">Nueva captura de datos de cambios (CDC) y seguimiento de cambios en SQL Server 2008</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/68691118339/" title="SQLSERVER | Mecanismo de captura de cambios de registro de CDC">SQLSERVER | Mecanismo de captura de cambios de registro de CDC</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/24162332368/" title="SQL Server 2016 Encienda la función CDC Capture Datos de cambio">SQL Server 2016 Encienda la función CDC Capture Datos de cambio</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/1760368728/" title="Use CDC (Captura de cambio de datos) en SSIS 2012">Use CDC (Captura de cambio de datos) en SSIS 2012</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/51461338516/" title="Introducción a la captura de datos modificados (CDC) en SQL Server 2008 [ ]">Introducción a la captura de datos modificados (CDC) en SQL Server 2008 [ ]</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/27021480244/" title="Introducción a la captura de datos modificados (CDC) en SQL Server 2008 [ ]">Introducción a la captura de datos modificados (CDC) en SQL Server 2008 [ ]</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/2621722367/" title="Introducción a la función de extracción de datos y migración de datos de SQLServer CDC 2">Introducción a la función de extracción de datos y migración de datos de SQLServer CDC 2</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/68311204277/" title="Función y descripción de CDC en la base de datos SQL Server 2008">Función y descripción de CDC en la base de datos SQL Server 2008</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/88782073951/" title="Use marcas de tiempo en Kettle para lograr cambios en la captura de datos (CDC)">Use marcas de tiempo en Kettle para lograr cambios en la captura de datos (CDC)</a></li>
+</ul>
+<div style="width:320px;height:250px;background-color: white;" id="leftads1" class="adsloading">
+<div id="79041-2"><script src="https://ads.themoneytizer.com/s/gen.js?type=2"></script><script src="https://ads.themoneytizer.com/s/requestform.js?siteId=79041&amp;formatId=2"></script></div>
+</div>
+<div style="padding-bottom:10px;"></div>
+<h3 class="page-title services" style="margin-top:0px;">Articulos Populares</h3>
+<ul>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/2894483739/" title="Copia de seguridad física mysql a otras máquinas para recuperación">Copia de seguridad física mysql a otras máquinas para recuperación</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/83971362173/" title="Resumen de desarrollo y gestión de sistemas de información">Resumen de desarrollo y gestión de sistemas de información</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/7453576341/" title="java annotation">java annotation</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/67902395477/" title="QT Personaliza un cuadro desplegable (usando la combinación de componentes básicos)">QT Personaliza un cuadro desplegable (usando la combinación de componentes básicos)</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/2731411645/" title="El secreto detrás de la tecnología detrás del Double 11 GC">El secreto detrás de la tecnología detrás del Double 11 GC</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/14381476885/" title="Tipo de datos compuestos, estadísticas de frecuencia de palabras en inglés">Tipo de datos compuestos, estadísticas de frecuencia de palabras en inglés</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/60832760885/" title="Ejercicio práctico de la aplicación de la nube de Tianyi: la intranet pasa el grupo de recursos de ROS y Tianyi Cloud para lograr una red de nubes mixtas">Ejercicio práctico de la aplicación de la nube de Tianyi: la intranet pasa el grupo de recursos de ROS y Tianyi Cloud para lograr una red de nubes mixtas</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/70921614634/" title="Productos secos | Una comprensión profunda de las instrucciones de ubicación en nginx">Productos secos | Una comprensión profunda de las instrucciones de ubicación en nginx</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/55322814021/" title="Minificación del texto de la interfaz de inicio de sesión SAP (modificación del texto del menú de inicio de sesión de SAP)">Minificación del texto de la interfaz de inicio de sesión SAP (modificación del texto del menú de inicio de sesión de SAP)</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/7376680076/" title="Práctica del ganado 33 tokitsukaze y contar">Práctica del ganado 33 tokitsukaze y contar</a></li>
+</ul>
+<div style="width:320px;height:615px;background-color: white;" id="leftads2" class="adsloading">
+<div id="79041-3"><script src="https://ads.themoneytizer.com/s/gen.js?type=3"></script><script src="https://ads.themoneytizer.com/s/requestform.js?siteId=79041&amp;formatId=3"></script></div>
+</div>
+<h3 class="page-title services" style="margin-top:0px;">Artículo Recomendado</h3>
+<ul>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/19331058056/" title="Promesa patrón de flujo de control asíncrono">Promesa patrón de flujo de control asíncrono</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/2887294909/" title="Mi opinión sobre la arquitectura del sistema Netease: alta disponibilidad">Mi opinión sobre la arquitectura del sistema Netease: alta disponibilidad</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/97381431243/" title="Utilice Eclipse para la depuración del lado del servidor PHP">Utilice Eclipse para la depuración del lado del servidor PHP</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/10581284000/" title="[Python] cierre">[Python] cierre</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/69222434834/" title="[Java] Springaop Five Mejoras">[Java] Springaop Five Mejoras</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/6985559382/" title="Implementación de firma manuscrita">Implementación de firma manuscrita</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/1517318703/" title="Control de concurrencia Java (tres) 3. Crear hilos usando clases internas anónimas">Control de concurrencia Java (tres) 3. Crear hilos usando clases internas anónimas</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/12302841044/" title="Análisis de SWR y análisis del código fuente en reaccionar ganchos">Análisis de SWR y análisis del código fuente en reaccionar ganchos</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/33451887191/" title="LeetCode El mejor momento para comprar y vender acciones (C ++)">LeetCode El mejor momento para comprar y vender acciones (C ++)</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/article/62591325015/" title="Dos métodos de implementación de la transacción declarativa Spring">Dos métodos de implementación de la transacción declarativa Spring</a></li>
+</ul>
+<div style="width:320px;height:250px;background-color: white;" id="leftads3" class="adsloading">
+<div id="79041-19"><script src="https://ads.themoneytizer.com/s/gen.js?type=19"></script><script src="https://ads.themoneytizer.com/s/requestform.js?siteId=79041&amp;formatId=19"></script></div>
+</div>
+<div style="padding-bottom:10px;"></div>
+<h3 class="page-title services" style="margin-top:0px;">Etiquetas Relacionadas</h3>
+<ul>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/tag/Database/" title="Database">Database</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/tag/base+de+datos/" title="base de datos">base de datos</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/tag/Sem%C3%A1foro/" title="Semáforo">Semáforo</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/tag/Principio/" title="Principio">Principio</a></li>
+<li style="padding-top: 6px;padding-bottom: 6px;border-bottom:1px solid #EBEBEB;line-height:20px;"><a href="https://www.programmerclick.com/tag/Python+implementa+cambios+en+la+tabla+de+empleados/" title="Python implementa cambios en la tabla de empleados">Python implementa cambios en la tabla de empleados</a></li>
+</ul>
+<div id="rightbottomads" style="text-align:center;padding-top:10px;">
+<iframe id="programmerclick.com_300x600_responsive_5_DFP" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" width="1" height="1" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/saved_resource(4).html"></iframe>
+<script>
+    (function () {
+        var size='300x600|300x250',
+            adunit = 'programmerclick.com_300x600_responsive_5_DFP',
+            childNetworkId = '22396446015',
+            xmlhttp = new XMLHttpRequest();xmlhttp.onreadystatechange = function(){if(xmlhttp.readyState==4 && xmlhttp.status==200){var iframe=document.getElementById(adunit).contentWindow.document;iframe.open();iframe.write(xmlhttp.responseText);iframe.close();}};var child=childNetworkId.trim()?','+childNetworkId.trim():'';xmlhttp.open("GET", 'https://pubads.g.doubleclick.net/gampad/adx?iu=/147246189'+child+'/'+adunit+'&sz='+encodeURI(size)+'&t=Placement_type%3Dserving&'+Date.now(), true);xmlhttp.send();})();
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="anchor_ads">
+<iframe id="programmerclick.com_970x90_sticky_anchorad_responsive_DFP" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" width="1" height="1" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/saved_resource(5).html"></iframe>
+<script>
+    (function () {
+        var size='970x90|320x100',
+            adunit = 'programmerclick.com_970x90_sticky_anchorad_responsive_DFP',
+            childNetworkId = '22396446015',
+            xmlhttp = new XMLHttpRequest();xmlhttp.onreadystatechange = function(){if(xmlhttp.readyState==4 && xmlhttp.status==200){var iframe=document.getElementById(adunit).contentWindow.document;iframe.open();iframe.write(xmlhttp.responseText);iframe.close();}};var child=childNetworkId.trim()?','+childNetworkId.trim():'';xmlhttp.open("GET", 'https://pubads.g.doubleclick.net/gampad/adx?iu=/147246189'+child+'/'+adunit+'&sz='+encodeURI(size)+'&t=Placement_type%3Dserving&'+Date.now(), true);xmlhttp.send();})();
+</script>
+</div>
+<div class="columns footer-meta">
+<div class="row">
+<div class="columns large-12 footer-meta-inner">
+<div class="row">
+<div class="columns large-12"> © 2020-2022 All rights reserved by programmerclick.com</div>
+</div>
+</div>
+</div>
+</div>
+</div><iframe name="__tcfapiLocator" style="display: none;" src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/saved_resource(6).html"></iframe>
+<script src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/viewer.min.js.download"></script>
+<script>
+var viewer = new Viewer(document.getElementById('article_content'));
+</script>
+<script src="./Utilice la función CDC de SQLServer 2008 para realizar la captura de cambios de datos - programador clic_files/bottom.js.download"></script>
+
+<script type="text/javascript">
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(72909517, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/72909517" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+
+
+<div id="pocket-extension-root"><div class="pocket-extension g366awb g1wkq7a6 pocket-theme-light"><div class="d5dq2r3"><div class="doorHanger"><header class="header h1ypxqj3"><div class="save-status"><div class="icon-wrapper"><span class="igxbmuu icon "><svg aria-labelledby=" " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26"><path fill="#EE4056" title="Pocket" alt="Pocket" d="M26,4a2,2,0,0,0-2-2H2A2,2,0,0,0,0,4v9c0,0.1,0,.2,0,0.4s0,0.4,0,.6c0,4,5.8,11,13,11s13-7,13-11c0-.2,0-0.4,0-0.6s0-.2,0-0.4V4Zm-5.5,7-6,6a1.9,1.9,0,0,1-2.9,0l-6-6A1.7,1.7,0,0,1,8,8.5l5,5,5-5a1.7,1.7,0,0,1,2.5,0h0A1.7,1.7,0,0,1,20.5,11Z"></path></svg></span></div><div class="saveBlock">Saved to Pocket</div></div><button class="pocket-button bzy3u3x inline">Remove</button></header><div class="item-preview p11uhn14"><div><h3>programmerclick.com</h3><p>programmerclick.com</p></div></div><div class="tagging-wrapper tne2ump"><div role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="downshift-0-label"><div class="tagging-well"><ul class="chip-list c1j7byxg"><li class="chip-item closvci">mssqlserver</li><li class="chip-item closvci">CDC</li></ul><div class="input-wrapper i657hj0"><div style="display: inline-block;"><input aria-autocomplete="list" aria-labelledby="downshift-0-label" autocomplete="off" id="downshift-0-input" value="" style="box-sizing: content-box; width: 2px;"><div style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-size: 16px; font-family: &quot;Graphik Web&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-weight: 400; font-style: normal; letter-spacing: normal; text-transform: none;"></div></div></div></div></div><div class="suggestions s1eqeo30"><ul></ul></div></div><footer class="footer f1mytilp"><button class="pocket-button bzy3u3x inline buttonLink"><span class="igxbmuu icon "><svg aria-labelledby=" " fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM5 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM5 19a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path fill-rule="evenodd" d="M7 5a1 1 0 011-1h13a1 1 0 110 2H8a1 1 0 01-1-1zM7 12a1 1 0 011-1h13a1 1 0 110 2H8a1 1 0 01-1-1zM7 19a1 1 0 011-1h13a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg></span>My List</button><button class="pocket-button bzy3u3x inline buttonLink"><span class="igxbmuu icon "><svg aria-labelledby=" " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.736 10.317l-2.942-.5a7.08 7.08 0 00-.448-1.077l1.729-2.434a.316.316 0 00-.034-.407l-1.94-1.94a.316.316 0 00-.407-.034l-2.434 1.73a7.088 7.088 0 00-1.078-.449l-.499-2.942A.317.317 0 0013.371 2H10.63a.317.317 0 00-.312.264l-.5 2.942c-.37.12-.73.27-1.077.448L6.306 3.925a.317.317 0 00-.407.034L3.959 5.9a.317.317 0 00-.034.407l1.73 2.434a7.085 7.085 0 00-.449 1.078l-2.942.499a.317.317 0 00-.264.312v2.742a.317.317 0 00.264.312l2.942.5c.12.37.27.73.448 1.077l-1.729 2.434a.316.316 0 00.034.408L5.9 20.04a.317.317 0 00.407.034l2.434-1.73c.347.18.707.33 1.078.449l.499 2.942a.317.317 0 00.312.264h2.742a.317.317 0 00.312-.264l.5-2.942c.37-.12.73-.27 1.077-.448l2.434 1.729a.317.317 0 00.407-.034l1.94-1.94a.317.317 0 00.034-.407l-1.73-2.434c.18-.347.33-.707.449-1.078l2.942-.499a.317.317 0 00.264-.312V10.63a.317.317 0 00-.264-.312z"></path><circle cx="12" cy="12" r="3" stroke="currentColor" fill="none" stroke-width="2"></circle></svg></span></button></footer></div></div></div></div><div id="a11y-status-message" role="status" aria-live="polite" aria-relevant="additions text" style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;"></div></body></html>

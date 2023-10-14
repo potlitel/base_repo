@@ -1,0 +1,13 @@
+https://twitter.com/_georgemoller/status/1678374278511697920
+https://levelup.gitconnected.com/react-context-api-vs-redux-99d46b8ff2eb#:~:text=Differences%20between%20React%20Context%20API%20and%20Redux&text=React%20Context%20API%20is%20designed,while%20Redux%20updates%20are%20predictable.
+
+https://bobbyhadz.com/blog/react-objects-are-not-valid-as-react-child
+https://bobbyhadz.com/blog/react-objects-are-not-valid-as-react-child
+
+
+
+dotnet core
+dotnet --list-sdks
+dotnet new webapi -o projectName --framework "net5.0"
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+dotnet add package System.IdentityModel.Tokens.Jwt
